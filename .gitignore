@@ -1,0 +1,4 @@
+build
+dist
+wfly-deploy.spec
+.DS_Store
