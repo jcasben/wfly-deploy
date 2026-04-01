@@ -8,11 +8,16 @@ import sys
 CONFIG_FILE = ".wflydeploy_conf.json"
 
 def get_config():
-    if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r') as f:
-            print("✅ Configuración detectada correctamente")
-            return json.load(f)
-    
+    if os.path.exists(CONFIG_FILE) and os.path.getsize(CONFIG_FILE) > 0:
+        try:
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                if "wildfly_path" in config and "group_id" in config:
+                    print("✅ Configuración detectada correctamente")
+                    return config
+        except (json.JSONDecodeError, KeyError):
+            print("⚠️ El archivo de configuración está corrupto.")
+
     print("----- CONFIGURACIÓN INICIAL -----")
     path = input("Introduce la ruta de 'standalone/deployments' de tu Wildfly: ").strip()
     group = input("Introduce tu número de equipo de la práctica (ej: bayes00 -> 00): ").strip()
